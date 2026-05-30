@@ -91,14 +91,15 @@ class OPMAnimation(Scene):
 
     def show_enunc(self):
         enunc = (
-            r"\begin{minipage}{12cm}"
+            r"\begin{minipage}{14cm}"
             r"\textbf{Problema 3 (OPM 2016)}\\"
-            r"Considere um triângulo $ABC$ e triângulos equiláteros $ABD$, $BCE$ e $CAF$ construídos externamente. "
-            r"Sejam $O_1, O_2, O_3$ os seus centros. Construímos sobre $\overline{BE}$ o triângulo $GEB \cong ABC$ e sobre $\overline{BG}$ "
-            r"o equilátero $BGH$ de centro $O_2'$. Prove que:\\"
-            r"a) $\triangle O_2 A O_3 \cong \triangle O_2' B O_3$ e $\triangle O_2 C O_1 \cong \triangle O_2' B O_1$\\"
-            r"b) $\angle O_2 \hat{O_1} O_2' = \angle O_2 \hat{O_3} O_2' = 120^\circ$\\"
-            r"c) $\triangle O_1 O_2 O_3$ é equilátero."
+            r"Considere um triângulo $ABC$ e triângulos equiláteros $ABD$, $BCE$ e $CAF$ construídos externamente sobre seus lados. "
+            r"Sejam $O_1$, $O_2$ e $O_3$ os centros dos triângulos $BCE$, $CAF$ e $ABD$, respectivamente. "
+            r"Construímos sobre o lado $\overline{BE}$ o triângulo $GEB$ congruente ao triângulo $ABC$ e sobre o lado $\overline{BG}$ "
+            r"mais um triângulo equilátero $BGH$ de centro $O_2'$.\\[0.2cm]"
+            r"a) Prove as seguintes congruências de triângulos: $\triangle O_2 A O_3 \equiv \triangle O_2' B O_3$ e $\triangle O_2 C O_1 \equiv \triangle O_2' B O_1$.\\"
+            r"b) Prove que $\angle O_2 \hat{O_1} O_2' = \angle O_2 \hat{O_3} O_2' = 120^\circ$. Você não pode usar que o triângulo $O_1O_2O_3$ é equilátero. Nós não demonstramos isso ainda!\\"
+            r"c) Conclua a demonstração do Teorema de Napoleão provando que $\triangle O_1 O_2 O_3$ é equilátero."
             r"\end{minipage}"
         )
         
