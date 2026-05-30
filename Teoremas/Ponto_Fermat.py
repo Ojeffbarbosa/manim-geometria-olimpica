@@ -70,7 +70,7 @@ class FermatPoint(Scene):
             #normaliza o vetor perpendicular
             perp = perp / np.linalg.norm(perp)
             
-            #altura do triângulo equilátero
+            #altura do triângulo equilstero
             comp_lado = np.linalg.norm(v_lado)
             alt = comp_lado * np.sqrt(3) / 2
             
@@ -118,42 +118,42 @@ class FermatPoint(Scene):
         #ANIMAÇÃO DOS VÉRTICES
         ctrl = ValueTracker(0)
         
-        def get_vert_A():
+        def get_vert_B():
             """
-            Retorna a posição do vértice A baseada no estado da animação.
-            
-            O vértice se move através de posições pré-definidas para demonstrar
-            diferentes configurações do triângulo.
+            Retorna a posição do vértice B baseada no estado da animação (inferior esquerdo).
             """
             t = ctrl.get_value()
             
             P0 = np.array([-1.5, -0.8, 0])
             P1 = np.array([-1.5, -0.8, 0])
             P2 = np.array([-1.8, -0.6, 0])
-            P3 = np.array([-2.0, 0.0, 0])
-            P4 = np.array([-2.0, 0.0, 0])
+            P3 = np.array([-1.0, -1.0, 0])
+            P4 = np.array([-2.2, -0.4, 0])
+            P5 = np.array([-1.5, -0.8, 0])
             
-
-            if t < 1: #gambiarra melhor que a funcao feita no teorema de napoleao
+            if t < 1:
                 return P0 + (P1 - P0) * t
             elif t < 2:
                 return P1 + (P2 - P1) * (t - 1)
             elif t < 3:
                 return P2 + (P3 - P2) * (t - 2)
-            else:
+            elif t < 4:
                 return P3 + (P4 - P3) * (t - 3)
+            else:
+                return P4 + (P5 - P4) * min(t - 4, 1)
         
-        def get_vert_B():
+        def get_vert_C():
             """
-            Retorna a posição do vértice B baseada no estado da animação.
+            Retorna a posição do vértice C baseada no estado da animação (inferior direito).
             """
             t = ctrl.get_value()
             
             P0 = np.array([1.5, -0.8, 0])
             P1 = np.array([1.5, -0.8, 0])
             P2 = np.array([1.8, -0.6, 0])
-            P3 = np.array([2.0, 0.0, 0])
-            P4 = np.array([2.0, 0.0, 0])
+            P3 = np.array([2.2, -0.4, 0])
+            P4 = np.array([1.0, -1.0, 0])
+            P5 = np.array([1.5, -0.8, 0])
             
             if t < 1:
                 return P0 + (P1 - P0) * t
@@ -161,20 +161,23 @@ class FermatPoint(Scene):
                 return P1 + (P2 - P1) * (t - 1)
             elif t < 3:
                 return P2 + (P3 - P2) * (t - 2)
-            else:
+            elif t < 4:
                 return P3 + (P4 - P3) * (t - 3)
+            else:
+                return P4 + (P5 - P4) * min(t - 4, 1)
         
-        def get_vert_C():
+        def get_vert_A():
             """
-            Retorna a posição do vértice C baseada no estado da animação.
+            Retorna a posição do vértice A baseada no estado da animação (topo).
             """
             t = ctrl.get_value()
             
             P0 = np.array([0.0, 1.2, 0])       
             P1 = np.array([1.0, 1.5, 0])       
             P2 = np.array([0.5, 1.6, 0])      
-            P3 = np.array([0.0, 1.1547, 0])    # angulo C = 120° exatos
-            P4 = np.array([0.0, 0.5, 0])       # angulo C > 120° (obtuso)
+            P3 = np.array([-0.8, 1.4, 0])
+            P4 = np.array([0.8, 1.0, 0])
+            P5 = np.array([0.0, 1.2, 0])
             
             if t < 1:
                 return P0 + (P1 - P0) * t
@@ -182,28 +185,30 @@ class FermatPoint(Scene):
                 return P1 + (P2 - P1) * (t - 1)
             elif t < 3:
                 return P2 + (P3 - P2) * (t - 2)
-            else:
+            elif t < 4:
                 return P3 + (P4 - P3) * (t - 3)
+            else:
+                return P4 + (P5 - P4) * min(t - 4, 1)
         
         # FUNÇÕES PARA CALCULAR OS VÉRTICES EXTERNOS
 
         
         def get_vert_D():
-            """Vértice externo do triângulo equilátero sobre AB"""
-            return construir_tri_eq_externo(
-                get_vert_A(), get_vert_B(), get_vert_C()
-            )
-        
-        def get_vert_E():
-            """Vértice externo do triângulo equilátero sobre BC"""
+            """Vértice externo A' (sobre BC, oposto ao A)"""
             return construir_tri_eq_externo(
                 get_vert_B(), get_vert_C(), get_vert_A()
             )
         
-        def get_vert_F():
-            """Vértice externo do triângulo equilátero sobre CA"""
+        def get_vert_E():
+            """Vértice externo B' (sobre CA, oposto ao B)"""
             return construir_tri_eq_externo(
                 get_vert_C(), get_vert_A(), get_vert_B()
+            )
+        
+        def get_vert_F():
+            """Vértice externo C' (sobre AB, oposto ao C)"""
+            return construir_tri_eq_externo(
+                get_vert_A(), get_vert_B(), get_vert_C()
             )
         
 
@@ -213,9 +218,9 @@ class FermatPoint(Scene):
             Pela construção, as três linhas AD, BE e CF sempre se encontram
             em um único ponto como visto no artigo, que é o ponto de fermat
             """
-            # pega os pontos
-            p1, p2 = get_vert_A(), get_vert_E()
-            p3, p4 = get_vert_C(), get_vert_D()
+            # pega os pontos AD e BE 
+            p1, p2 = get_vert_A(), get_vert_D()
+            p3, p4 = get_vert_B(), get_vert_E()
             
             x1, y1 = p1[0], p1[1]
             x2, y2 = p2[0], p2[1]
@@ -236,7 +241,9 @@ class FermatPoint(Scene):
             x = x1 + t * (x2 - x1)
             y = y1 + t * (y2 - y1)
             
-            return np.array([x, y, 0])
+            ponto_intersecao = np.array([x, y, 0])
+            
+            return ponto_intersecao
         
 
         # CRIAÇÃO DOS ELEMENTOS VISUAIS
@@ -251,8 +258,8 @@ class FermatPoint(Scene):
         ))
         
         # Triângulos equilateros externos
-        tri_ABD = always_redraw(lambda: Polygon(
-            get_vert_A(), get_vert_B(), get_vert_D(),
+        tri_CAF = always_redraw(lambda: Polygon(
+            get_vert_C(), get_vert_A(), get_vert_E(),
             color=COR_BORDA,
             fill_color=COR_ABD,
             fill_opacity=0.25,
@@ -260,15 +267,15 @@ class FermatPoint(Scene):
         ))
         
         tri_BCE = always_redraw(lambda: Polygon(
-            get_vert_B(), get_vert_C(), get_vert_E(),
+            get_vert_B(), get_vert_C(), get_vert_D(),
             color=COR_BORDA,
             fill_color=COR_BCE,
             fill_opacity=0.25,
             stroke_width=3
         ))
         
-        tri_CAF = always_redraw(lambda: Polygon(
-            get_vert_C(), get_vert_A(), get_vert_F(),
+        tri_ABD = always_redraw(lambda: Polygon(
+            get_vert_A(), get_vert_B(), get_vert_F(),
             color=COR_BORDA,
             fill_color=COR_CAF,
             fill_opacity=0.25,
@@ -276,16 +283,16 @@ class FermatPoint(Scene):
         ))
         
         # Linhas conectando vértices aos vértices opostos dos triângulos externos
-        linha_CD = always_redraw(lambda: criar_seg_estendido(
-            get_vert_C(), get_vert_D(), get_fermat()
-        ))
-        
         linha_AE = always_redraw(lambda: criar_seg_estendido(
-            get_vert_A(), get_vert_E(), get_fermat()
+            get_vert_A(), get_vert_D(), get_fermat()
         ))
         
         linha_BF = always_redraw(lambda: criar_seg_estendido(
-            get_vert_B(), get_vert_F(), get_fermat()
+            get_vert_B(), get_vert_E(), get_fermat()
+        ))
+        
+        linha_CD = always_redraw(lambda: criar_seg_estendido(
+            get_vert_C(), get_vert_F(), get_fermat()
         ))
         
         # Ponto de Fermat
@@ -313,13 +320,14 @@ class FermatPoint(Scene):
             n1 = np.linalg.norm(v1)
             n2 = np.linalg.norm(v2)
             
+            # Se o ponto de Fermat coincidir com um vértice, não desenha o ângulo
+            if n1 < 1e-3 or n2 < 1e-3:
+                return VGroup()
+                
             # Calcula o ângulo usando produto escalar
-            if n1 == 0 or n2 == 0:
-                ang_graus = 0
-            else:
-                coss = np.dot(v1, v2) / (n1 * n2)
-                coss = np.clip(coss, -1.0, 1.0)
-                ang_graus = np.degrees(np.arccos(coss))
+            coss = np.dot(v1, v2) / (n1 * n2)
+            coss = np.clip(coss, -1.0, 1.0)
+            ang_graus = np.degrees(np.arccos(coss))
             
             txt_ang = f"{int(round(ang_graus))}^\\circ"
             
@@ -343,82 +351,50 @@ class FermatPoint(Scene):
         
         # Ângulos no Ponto de Fermat todos devem ser ~120° quando válido
         ang_EPF = always_redraw(lambda: criar_grupo_ang_preenchido(
-            get_fermat(), get_vert_E(), get_vert_F(), 0.32, ORANGE
+            get_fermat(), get_vert_C(), get_vert_A(), 0.32, ORANGE
         ))
         
         ang_FPD = always_redraw(lambda: criar_grupo_ang_preenchido(
-            get_fermat(), get_vert_F(), get_vert_D(), 0.32, BLUE
+            get_fermat(), get_vert_A(), get_vert_B(), 0.32, BLUE
         ))
         
         ang_DPE = always_redraw(lambda: criar_grupo_ang_preenchido(
-            get_fermat(), get_vert_D(), get_vert_E(), 0.32, GREEN
+            get_fermat(), get_vert_B(), get_vert_C(), 0.32, GREEN
         ))
         
         # RÓTULOS DOS PONTOS
 
         
         # Rótulos dos vértices do triângulo original
-        rot_A = always_redraw(lambda: MathTex(
-            "A", font_size=36, color=COR_TXT
-        ).next_to(get_vert_A(), DOWN + LEFT, buff=0.1))
-        
         rot_B = always_redraw(lambda: MathTex(
             "B", font_size=36, color=COR_TXT
-        ).next_to(get_vert_B(), DOWN + RIGHT, buff=0.1))
+        ).next_to(get_vert_B(), DOWN + LEFT, buff=0.1))
         
         rot_C = always_redraw(lambda: MathTex(
             "C", font_size=36, color=COR_TXT
-        ).next_to(get_vert_C(), UP, buff=0.1))
+        ).next_to(get_vert_C(), DOWN + RIGHT, buff=0.1))
+        
+        rot_A = always_redraw(lambda: MathTex(
+            "A", font_size=36, color=COR_TXT
+        ).next_to(get_vert_A(), UP, buff=0.1))
         
         # Rótulos dos vértices externos
         rot_D = always_redraw(lambda: MathTex(
-            "D", font_size=30, color=COR_TXT
+            "A'", font_size=30, color=COR_TXT
         ).next_to(get_vert_D(), DOWN, buff=0.1))
         
         rot_E = always_redraw(lambda: MathTex(
-            "E", font_size=30, color=COR_TXT
+            "B'", font_size=30, color=COR_TXT
         ).next_to(get_vert_E(), RIGHT, buff=0.1))
         
         rot_F = always_redraw(lambda: MathTex(
-            "F", font_size=30, color=COR_TXT
+            "C'", font_size=30, color=COR_TXT
         ).next_to(get_vert_F(), LEFT, buff=0.1))
         
         # Rótulo do Ponto de Fermat
         rot_fermat = always_redraw(lambda: MathTex(
-            "P", font_size=30, color=COR_FERMAT
+            "F", font_size=30, color=COR_FERMAT
         ).next_to(get_fermat(), UP + RIGHT, buff=0.25))
-        
-        # FUNÇÃO PARA CALCULAR O ÂNGULO C DO TRIÂNGULO
-
-        # mostrat o caso  quando ângulo C >= 120°
-        
-        def calc_ang_C():
-
-            a = get_vert_A()
-            b = get_vert_B()
-            c = get_vert_C()
-            
-            # Vetores dos lados que formam o ângulo C
-            v_CA = a - c
-            v_CB = b - c
-            
-            n_CA = np.linalg.norm(v_CA)
-            n_CB = np.linalg.norm(v_CB)
-            
-            if n_CA == 0 or n_CB == 0:
-                return 0
-            
-            coss = np.dot(v_CA, v_CB) / (n_CA * n_CB)
-            coss = np.clip(coss, -1.0, 1.0)
-            
-            return np.degrees(np.arccos(coss))
-        
-        # Texto mostrando o valor do ângulo C
-        txt_ang_C = always_redraw(lambda: MathTex(
-            f"\\hat{{C}} = {int(round(calc_ang_C()))}^\\circ",
-            font_size=36, color=BLACK
-        ).to_edge(RIGHT, buff=1))
-        
 
         # SEQUÊNCIA DE ANIMAÇÕES
 
@@ -429,11 +405,11 @@ class FermatPoint(Scene):
         self.wait()
         
         # --- ETAPA 2: CONSTRUIR OS TRIÂNGULOS EQUILÁTEROS EXTERNOS
-        self.play(Create(tri_ABD), FadeIn(rot_D))
+        self.play(Create(tri_BCE), FadeIn(rot_D))
         self.wait(0.3)
-        self.play(Create(tri_BCE), FadeIn(rot_E))
+        self.play(Create(tri_CAF), FadeIn(rot_E))
         self.wait(0.3)
-        self.play(Create(tri_CAF), FadeIn(rot_F))
+        self.play(Create(tri_ABD), FadeIn(rot_F))
         self.wait()
         
         # --- ETAPA 3: TRAÇAR AS LINHA
@@ -454,65 +430,13 @@ class FermatPoint(Scene):
         self.play(ctrl.animate.set_value(1), run_time=2, rate_func=smooth)
         self.wait(0.5)
         self.play(ctrl.animate.set_value(2), run_time=2, rate_func=smooth)
-        self.wait()
-        
-        # --- ETAPA 7: TRANSIÇÃO PARA O CASO ESPECIAL
-        self.play(FadeOut(*self.mobjects))
         self.wait(0.5)
-        
-        # texto caso especial
-        pergunta = Text(
-            "E se um dos ângulos internos\nfosse maior ou igual a 120°?",
-            font_size=36, color=BLACK
-        )
-        self.play(Write(pergunta))
-        self.wait(3)
-        self.play(FadeOut(pergunta))
+        self.play(ctrl.animate.set_value(3), run_time=2, rate_func=smooth)
         self.wait(0.5)
-        
-        # --- ETAPA 8: REAPARECER A FIGURA
-        self.play(
-            FadeIn(tri_ABC), FadeIn(rot_A), FadeIn(rot_B), FadeIn(rot_C),
-            FadeIn(tri_ABD), FadeIn(rot_D),
-            FadeIn(tri_BCE), FadeIn(rot_E),
-            FadeIn(tri_CAF), FadeIn(rot_F),
-            FadeIn(linha_AE), FadeIn(linha_BF), FadeIn(linha_CD),
-            FadeIn(pt_fermat), FadeIn(rot_fermat),
-            FadeIn(ang_EPF), FadeIn(ang_FPD), FadeIn(ang_DPE)
-        )
-        self.wait()
-        
-        # --- ETAPA 9: MOSTRAR O ÂNGULO C
-        def criar_visual_ang_C():
-            """Cria a visualização do ângulo C do triângulo."""
-            l1 = Line(get_vert_C(), get_vert_A())
-            l2 = Line(get_vert_C(), get_vert_B())
-            arco = Angle(l1, l2, radius=0.32, color=BLACK, stroke_width=2)
-            
-            preenche = arco.copy()
-            preenche.add_line_to(get_vert_C())
-            preenche.set_fill(color=BLACK, opacity=0.1)
-            preenche.set_stroke(width=0)
-            
-            return VGroup(preenche, arco)
-        
-        ang_C_visual = always_redraw(criar_visual_ang_C)
-        ang_C_estatico = criar_visual_ang_C()
-        
-        self.play(FadeIn(ang_C_estatico), Write(txt_ang_C))
-        self.add(ang_C_visual)
-        self.remove(ang_C_estatico)
-        self.wait()
-        
-        # --- ETAPA 10: VARIAR PARA ÂNGULO C = 120°
-        # Ponto de Fermat coincide com C
-        self.play(ctrl.animate.set_value(3), run_time=3, rate_func=smooth)
-        self.wait(1)  # Pausa para mostrar que é exatamente 120°
-        
-        # --- ETAPA 11: VARIAR PARA ÂNGULO C > 120°
-        # O Ponto de Fermat agora está no vértice C
-        self.play(ctrl.animate.set_value(4), run_time=3, rate_func=smooth)
-        self.wait()
+        self.play(ctrl.animate.set_value(4), run_time=2, rate_func=smooth)
+        self.wait(0.5)
+        self.play(ctrl.animate.set_value(5), run_time=2, rate_func=smooth)
+        self.wait(2)
         
         # --- LIMPEZA FINAL
         self.play(FadeOut(*self.mobjects))
