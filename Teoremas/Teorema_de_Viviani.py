@@ -229,6 +229,11 @@ class VivianiTheorem(Scene):
         self.play(titulo.animate.scale(0.7).to_edge(UP))
         self.wait(0.5)
         
+        texto_equilatero = Tex("Seja um triângulo equilátero:", color=BLACK).scale(0.8).next_to(titulo, DOWN, buff=0.5)
+        self.play(Write(texto_equilatero))
+        self.wait(1.5)
+        self.play(FadeOut(texto_equilatero))
+
         #ONSTRUÇÃO DO TRIÂNGULO 
         self.play(
             Create(triangulo),
